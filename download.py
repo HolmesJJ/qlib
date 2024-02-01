@@ -23,13 +23,13 @@ def delete(root_dir):
             os.remove(file_path)
 
 
-def deleteNullFile(path):
+def delete_empty_file(path):
     files = os.listdir(path)
     for file in files:
         if os.path.getsize(path + file) < 2000:
             os.remove(path + file)
             print(file + " deleted.")
-    print('deleteNullFile complete')
+    print('delete_empty_file complete')
 
 
 def download_basic_data(input_file):
@@ -101,7 +101,7 @@ def download_basic_data_all(data_path, debug=False):
     pool.close()
     pool.join()
     print("All processes are finished.")
-    deleteNullFile(data_path)
+    delete_empty_file(data_path)
     print('DownloadComplete')
 
 
