@@ -86,7 +86,8 @@ class Alpha360(DataHandlerLP):
         )
 
     def get_label_config(self):
-        return ["Ref($close, -2)/Ref($close, -1) - 1"], ["LABEL0"]
+        # return ["Ref($close, -2)/Ref($close, -1) - 1"], ["LABEL0"]
+        return ["$close"], ["LABEL0"]
 
     @staticmethod
     def get_feature_config():
