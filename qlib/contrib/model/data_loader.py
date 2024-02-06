@@ -161,7 +161,7 @@ def padding_mask(lengths, max_len=None):
 
 
 def data_provider(args, flag, df_raw=None, data_set=None):
-    Data = Dataset_Stock
+    Data = DatasetStock
     time_enc = 0 if args.embed != 'timeF' else 1
 
     if flag == 'test':
