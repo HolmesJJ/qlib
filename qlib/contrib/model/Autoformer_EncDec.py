@@ -195,7 +195,7 @@ class Decoder(nn.Module):
     def forward(self, x, cross, x_mask=None, cross_mask=None, trend=None):
         for layer in self.layers:
             x, residual_trend = layer(x, cross, x_mask=x_mask, cross_mask=cross_mask)
-            trend = trend + residual_trend
+            # trend = trend + residual_trend
 
         if self.norm is not None:
             x = self.norm(x)

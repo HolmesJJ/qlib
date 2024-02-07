@@ -28,24 +28,24 @@ from .Embed import DataEmbedding
 
 class InformerModel(Model):
     def __init__(
-        self,
-        d_feat: int = 20,
-        d_model: int = 64,
-        batch_size: int = 8192,
-        nhead: int = 2,
-        num_layers: int = 2,
-        dropout: float = 0,
-        n_epochs=100,
-        lr=0.0001,
-        metric="",
-        early_stop=5,
-        loss="mse",
-        optimizer="adam",
-        reg=1e-3,
-        n_jobs=10,
-        GPU=0,
-        seed=None,
-        **kwargs
+            self,
+            d_feat: int = 20,
+            d_model: int = 64,
+            batch_size: int = 8192,
+            nhead: int = 2,
+            num_layers: int = 2,
+            dropout: float = 0,
+            n_epochs=100,
+            lr=0.0001,
+            metric="",
+            early_stop=5,
+            loss="mse",
+            optimizer="adam",
+            reg=1e-3,
+            n_jobs=10,
+            GPU=0,
+            seed=None,
+            **kwargs
     ):
         # set hyper-parameters.
         self.d_model = d_model
@@ -62,7 +62,7 @@ class InformerModel(Model):
         self.device = torch.device("cuda:%d" % GPU if torch.cuda.is_available() and GPU >= 0 else "cpu")
         self.seed = seed
         self.logger = get_module_logger("InformerModel")
-        self.logger.info("Naive Transformer:" "\nbatch_size : {}" "\ndevice : {}".format(self.batch_size, self.device))
+        self.logger.info("Informer:" "\nbatch_size : {}" "\ndevice : {}".format(self.batch_size, self.device))
 
         if self.seed is not None:
             np.random.seed(self.seed)
@@ -139,10 +139,10 @@ class InformerModel(Model):
         return np.mean(losses), np.mean(scores)
 
     def fit(
-        self,
-        dataset: DatasetH,
-        evals_result=dict(),
-        save_path=None,
+            self,
+            dataset: DatasetH,
+            evals_result=dict(),
+            save_path=None,
     ):
         dl_train = dataset.prepare("train", col_set=["feature", "label"], data_key=DataHandlerLP.DK_L)
         dl_valid = dataset.prepare("valid", col_set=["feature", "label"], data_key=DataHandlerLP.DK_L)
@@ -246,8 +246,9 @@ class Informer(nn.Module):
     Informer with Propspare attention in O(LlogL) complexity
     Paper link: https://ojs.aaai.org/index.php/AAAI/article/view/17325/17132
     """
+
     def __init__(self, d_feat, c_out=5, d_model=32, d_ff=64, moving_avg=5, factor=3, n_heads=8,
-                        e_layers=2, d_layers=2):
+                 e_layers=2, d_layers=2):
         super(Informer, self).__init__()
 
         # Embedding
@@ -291,9 +292,9 @@ class Informer(nn.Module):
             projection=nn.Linear(d_model, c_out, bias=True)
         )
         self.linear = nn.Sequential(
-            nn.BatchNorm1d(20*5),
+            nn.BatchNorm1d(20 * 5),
             nn.Dropout(p=0.2),
-            nn.Linear(20*5, 1),
+            nn.Linear(20 * 5, 1),
         )
 
     def forward(self, src):

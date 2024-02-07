@@ -28,24 +28,24 @@ from .Embed import DataEmbedding_inverted
 
 class ITransformerModel(Model):
     def __init__(
-        self,
-        d_feat: int = 20,
-        d_model: int = 64,
-        batch_size: int = 4096,
-        nhead: int = 2,
-        num_layers: int = 2,
-        dropout: float = 0,
-        n_epochs=100,
-        lr=0.0001,
-        metric="",
-        early_stop=5,
-        loss="mse",
-        optimizer="adam",
-        reg=1e-3,
-        n_jobs=10,
-        GPU=0,
-        seed=None,
-        **kwargs
+            self,
+            d_feat: int = 20,
+            d_model: int = 64,
+            batch_size: int = 4096,
+            nhead: int = 2,
+            num_layers: int = 2,
+            dropout: float = 0,
+            n_epochs=100,
+            lr=0.0001,
+            metric="",
+            early_stop=5,
+            loss="mse",
+            optimizer="adam",
+            reg=1e-3,
+            n_jobs=10,
+            GPU=0,
+            seed=None,
+            **kwargs
     ):
         # set hyper-parameters.
         self.d_model = d_model
@@ -61,8 +61,8 @@ class ITransformerModel(Model):
         self.n_jobs = n_jobs
         self.device = torch.device("cuda:%d" % GPU if torch.cuda.is_available() and GPU >= 0 else "cpu")
         self.seed = seed
-        self.logger = get_module_logger("InformerModel")
-        self.logger.info("Naive Transformer:" "\nbatch_size : {}" "\ndevice : {}".format(self.batch_size, self.device))
+        self.logger = get_module_logger("ITransformerModel")
+        self.logger.info("ITransformer:" "\nbatch_size : {}" "\ndevice : {}".format(self.batch_size, self.device))
 
         if self.seed is not None:
             np.random.seed(self.seed)
@@ -139,10 +139,10 @@ class ITransformerModel(Model):
         return np.mean(losses), np.mean(scores)
 
     def fit(
-        self,
-        dataset: DatasetH,
-        evals_result=dict(),
-        save_path=None,
+            self,
+            dataset: DatasetH,
+            evals_result=dict(),
+            save_path=None,
     ):
         dl_train = dataset.prepare("train", col_set=["feature", "label"], data_key=DataHandlerLP.DK_L)
         dl_valid = dataset.prepare("valid", col_set=["feature", "label"], data_key=DataHandlerLP.DK_L)
@@ -250,7 +250,7 @@ class ITransformer(nn.Module):
     def __init__(self, d_feat, d_model=32, n_heads=8, factor=3, d_ff=64, e_layers=2, d_layers=2, use_norm=False):
         super(ITransformer, self).__init__()
         self.seq_len = 20
-        self.use_norm=use_norm
+        self.use_norm = use_norm
         # Embedding
         self.enc_embedding = DataEmbedding_inverted(self.seq_len, d_model)
 
@@ -282,21 +282,21 @@ class ITransformer(nn.Module):
             stdev = torch.sqrt(torch.var(x_enc, dim=1, keepdim=True, unbiased=False) + 1e-5)
             x_enc /= stdev
 
-        _, _, N = x_enc.shape # B L N
+        _, _, N = x_enc.shape  # B L N
         # B: batch_size;    E: d_model;
         # L: seq_len;       S: pred_len;
         # N: number of variate (tokens), can also includes covariates
 
         # Embedding
         # B L N -> B N E                (B L N -> B L E in the vanilla Transformer)
-        enc_out = self.enc_embedding(x_enc, x_mark_enc) # covariates (e.g timestamp) can be also embedded as tokens
+        enc_out = self.enc_embedding(x_enc, x_mark_enc)  # covariates (e.g timestamp) can be also embedded as tokens
 
         # B N E -> B N E                (B L E -> B L E in the vanilla Transformer)
         # the dimensions of embedded time series has been inverted, and then processed by native attn, layernorm and ffn modules
         enc_out, attns = self.encoder(enc_out, attn_mask=None)
 
         # B N E -> B N S -> B S N
-        dec_out = self.projector(enc_out).permute(0, 2, 1)[:, :, :N] # filter the covariates
+        dec_out = self.projector(enc_out).permute(0, 2, 1)[:, :, :N]  # filter the covariates
 
         if self.use_norm:
             # De-Normalization from Non-stationary Transformer
@@ -307,4 +307,6 @@ class ITransformer(nn.Module):
 
     def forward(self, x_enc):
         dec_out = self.forecast(x_enc)
-        return self.linear(dec_out[:, -1, :])  # [B, L, D]
+        logits = self.linear(dec_out[:, -1, :])
+
+        return logits.squeeze()
