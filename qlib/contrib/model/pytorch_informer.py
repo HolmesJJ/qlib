@@ -41,8 +41,10 @@ class InformerModel(Model):
             early_stop=5,
             loss="mse",
             optimizer="adam",
+            d_ff=64,
             reg=1e-3,
             n_jobs=10,
+            token_size=3,
             GPU=0,
             seed=None,
             **kwargs
@@ -68,7 +70,7 @@ class InformerModel(Model):
             np.random.seed(self.seed)
             torch.manual_seed(self.seed)
 
-        self.model = Informer(d_feat, d_model=d_model, n_heads=nhead, e_layers=num_layers)
+        self.model = Informer(d_feat, d_model=d_model, n_heads=nhead, e_layers=num_layers, token_size=token_size, d_ff=d_ff)
         if optimizer.lower() == "adam":
             self.train_optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.reg)
         elif optimizer.lower() == "gd":
@@ -248,12 +250,12 @@ class Informer(nn.Module):
     """
 
     def __init__(self, d_feat, c_out=5, d_model=32, d_ff=64, moving_avg=5, factor=3, n_heads=8,
-                 e_layers=2, d_layers=2):
+                 e_layers=2, d_layers=2, token_size=3):
         super(Informer, self).__init__()
 
         # Embedding
-        self.enc_embedding = DataEmbedding(d_feat, d_model)
-        self.dec_embedding = DataEmbedding(d_feat, d_model)
+        self.enc_embedding = DataEmbedding(d_feat, d_model, token_size=token_size)
+        self.dec_embedding = DataEmbedding(d_feat, d_model, token_size=token_size)
 
         # Encoder
         self.encoder = Encoder(

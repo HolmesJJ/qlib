@@ -1,0 +1,40 @@
+'The following are prediction results of the AutoformerModel model.'
+                          score
+datetime   instrument
+2017-01-03 SH600000    0.012233
+2017-01-04 SH600000   -0.008307
+2017-01-05 SH600000   -0.011939
+2017-01-06 SH600000    0.025112
+2017-01-09 SH600000    0.001181
+{'IC': 0.017218080467913607,
+ 'ICIR': 0.11543971020579248,
+ 'Rank IC': 0.031402881687796286,
+ 'Rank ICIR': 0.20826536727246192}
+
+'The following are analysis results of benchmark return(1day).'
+                       risk
+mean               0.000477
+std                0.012295
+annualized_return  0.113561
+information_ratio  0.598699
+max_drawdown      -0.370479
+'The following are analysis results of the excess return without cost(1day).'
+                       risk
+mean               0.000152
+std                0.004327
+annualized_return  0.036166
+information_ratio  0.541844
+max_drawdown      -0.077945
+'The following are analysis results of the excess return with cost(1day).'
+                       risk
+mean              -0.000026
+std                0.004326
+annualized_return -0.006103
+information_ratio -0.091440
+max_drawdown      -0.089743
+[5604:MainThread](2024-03-01 12:13:52,870) INFO - qlib.workflow - [record_temp.py:540] - Indicator analysis record 'indicator_analysis_1day.pkl' has been saved as the artifact of the Experiment 1
+'The following are analysis results of indicators(1day).'
+     value
+ffr    1.0
+pa     0.0
+pos    0.0

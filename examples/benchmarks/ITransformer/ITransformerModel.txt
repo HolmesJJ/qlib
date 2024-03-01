@@ -1,0 +1,40 @@
+'The following are prediction results of the ITransformerModel model.'
+                          score
+datetime   instrument
+2017-01-03 SH600000   -0.018220
+2017-01-04 SH600000   -0.037026
+2017-01-05 SH600000    0.001167
+2017-01-06 SH600000    0.020713
+2017-01-09 SH600000   -0.000867
+{'IC': 0.019687506089778813,
+ 'ICIR': 0.13836335086831208,
+ 'Rank IC': 0.037058052992216685,
+ 'Rank ICIR': 0.25774951821024367}
+
+'The following are analysis results of benchmark return(1day).'
+                       risk
+mean               0.000477
+std                0.012295
+annualized_return  0.113561
+information_ratio  0.598699
+max_drawdown      -0.370479
+'The following are analysis results of the excess return without cost(1day).'
+                       risk
+mean               0.000134
+std                0.004699
+annualized_return  0.031904
+information_ratio  0.440117
+max_drawdown      -0.118127
+'The following are analysis results of the excess return with cost(1day).'
+                       risk
+mean              -0.000050
+std                0.004697
+annualized_return -0.012011
+information_ratio -0.165753
+max_drawdown      -0.137684
+[19808:MainThread](2024-03-01 07:23:47,077) INFO - qlib.workflow - [record_temp.py:540] - Indicator analysis record 'indicator_analysis_1day.pkl' has been saved as the artifact of the Experiment 1
+'The following are analysis results of indicators(1day).'
+     value
+ffr    1.0
+pa     0.0
+pos    0.0

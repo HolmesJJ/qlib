@@ -1,0 +1,40 @@
+'The following are prediction results of the InformerModel model.'
+                          score
+datetime   instrument
+2017-01-03 SH600000    0.039847
+2017-01-04 SH600000    0.005241
+2017-01-05 SH600000    0.038374
+2017-01-06 SH600000    0.003257
+2017-01-09 SH600000    0.066774
+{'IC': 0.010957460056065113,
+ 'ICIR': 0.10098000156233607,
+ 'Rank IC': 0.023201854577871744,
+ 'Rank ICIR': 0.2020870939929206}
+
+'The following are analysis results of benchmark return(1day).'
+                       risk
+mean               0.000477
+std                0.012295
+annualized_return  0.113561
+information_ratio  0.598699
+max_drawdown      -0.370479
+'The following are analysis results of the excess return without cost(1day).'
+                       risk
+mean              -0.000003
+std                0.004433
+annualized_return -0.000817
+information_ratio -0.011946
+max_drawdown      -0.129896
+'The following are analysis results of the excess return with cost(1day).'
+                       risk
+mean              -0.000175
+std                0.004432
+annualized_return -0.041763
+information_ratio -0.610856
+max_drawdown      -0.168296
+[26748:MainThread](2024-03-01 14:19:05,654) INFO - qlib.workflow - [record_temp.py:540] - Indicator analysis record 'indicator_analysis_1day.pkl' has been saved as the artifact of the Experiment 1
+'The following are analysis results of indicators(1day).'
+     value
+ffr    1.0
+pa     0.0
+pos    0.0

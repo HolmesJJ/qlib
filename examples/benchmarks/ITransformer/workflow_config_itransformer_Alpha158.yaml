@@ -55,8 +55,16 @@ task:
         class: ITransformerModel
         module_path: qlib.contrib.model.pytorch_itransformer
         kwargs:
-            seed: 0
-            n_jobs: 20
+            seed: 0       # Random seed, no need to adjust
+            n_jobs: 20    # Number of parallel jobs, no need to adjust
+            d_model: 16   # Adjustable range [16, 32, 64, 128], model feature dimension, directly corresponds to the total number of model parameters, should not be set too high to avoid high memory usage, slow training, and over-fitting. A larger number of model parameters is not always better.
+            d_ff: 64      # Adjustable range [32, 64, 128], dimension of the feedforward layer
+            num_layers: 2 # Adjustable range [1, 2, 3, 4], number of network layers, also corresponds to the number of model parameters, similar to d_model
+            dropout: 0.2  # Adjustable range 0-1 as a float, dropout rate, the higher this value, the more it can alleviate over-fitting issues, but generally should not be greater than 0.5
+            lr: 0.0001    # Adjustable range [0.00005, 0.0001, 0.0002, 0.0005, 0.001], learning rate, very important
+            early_stop: 5 # Adjustable range [3, 5], early stopping rounds, training stops when validation loss does not improve for 3/5 rounds, used to prevent over-fitting
+            reg: 0.001    # Adjustable range [0.0005, 0.001, 0.005, 0.01], regularization weight, used to prevent over-fitting
+            n_epochs: 100 # Number of training epochs, generally not adjusted because in most cases training will stop early
     dataset:
         class: TSDatasetH
         module_path: qlib.data.dataset

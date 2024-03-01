@@ -41,6 +41,7 @@ class ITransformerModel(Model):
             early_stop=5,
             loss="mse",
             optimizer="adam",
+            d_ff=64,
             reg=1e-3,
             n_jobs=10,
             GPU=0,
@@ -68,7 +69,7 @@ class ITransformerModel(Model):
             np.random.seed(self.seed)
             torch.manual_seed(self.seed)
 
-        self.model = ITransformer(d_feat, d_model=d_model, n_heads=nhead, e_layers=num_layers)
+        self.model = ITransformer(d_feat, d_model=d_model, d_ff=d_ff, n_heads=nhead, e_layers=num_layers)
         if optimizer.lower() == "adam":
             self.train_optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.reg)
         elif optimizer.lower() == "gd":

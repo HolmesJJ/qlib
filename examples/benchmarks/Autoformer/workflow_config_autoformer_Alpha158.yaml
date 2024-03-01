@@ -55,8 +55,17 @@ task:
         class: AutoformerModel
         module_path: qlib.contrib.model.pytorch_autoformer
         kwargs:
-            seed: 0
-            n_jobs: 20
+            seed: 0       # Random seed, no need to adjust
+            n_jobs: 20    # Number of parallel jobs, no need to adjust
+            d_model: 16   # Adjustable range [16, 32, 64, 128], model feature dimension, directly corresponds to the total number of model parameters. It's not advisable to set too high to prevent high memory usage, slow training, and over-fitting. Bigger model size doesn't always mean better performance.
+            d_ff: 64      # Adjustable range [32, 64, 128], dimension of the feedforward layer
+            num_layers: 2 # Adjustable range [1, 2, 3, 4], number of network layers, also corresponds to the model's parameter count, similar to d_model
+            token_size: 3 # Adjustable range [3, 5, 7, 9, 11], token size, used for data segmentation
+            dropout: 0.2  # Adjustable range 0-1 as a float, dropout rate, higher values can mitigate over-fitting but generally shouldn't exceed 0.5
+            lr: 0.0001    # Adjustable range [0.00005, 0.0001, 0.0002, 0.0005, 0.001], learning rate, very important
+            early_stop: 5 # Adjustable range [3, 5], early stopping rounds, stops training when there's no improvement in validation loss for 3/5 rounds, used to prevent over-fitting
+            reg: 0.001    # Adjustable range [0.0005, 0.001, 0.005, 0.01], regularization weight, used to prevent over-fitting
+            n_epochs: 100 # Number of training epochs, generally not adjusted since most cases will trigger early stopping
     dataset:
         class: TSDatasetH
         module_path: qlib.data.dataset

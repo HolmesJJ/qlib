@@ -42,8 +42,10 @@ class AutoformerModel(Model):
             early_stop=5,
             loss="mse",
             optimizer="adam",
+            d_ff=64,
             reg=1e-3,
             n_jobs=10,
+            token_size=3,
             GPU=0,
             seed=None,
             **kwargs
@@ -69,7 +71,8 @@ class AutoformerModel(Model):
             np.random.seed(self.seed)
             torch.manual_seed(self.seed)
 
-        self.model = Autoformer(d_feat, d_model=d_model, n_heads=nhead, e_layers=num_layers)
+        self.model = Autoformer(d_feat, d_model=d_model, d_ff=d_ff, n_heads=nhead, e_layers=num_layers,
+                                token_size=token_size)
         if optimizer.lower() == "adam":
             self.train_optimizer = optim.Adam(self.model.parameters(), lr=self.lr, weight_decay=self.reg)
         elif optimizer.lower() == "gd":
@@ -250,7 +253,7 @@ class Autoformer(nn.Module):
     """
 
     def __init__(self, d_feat, c_out=5, d_model=32, d_ff=64, moving_avg=5, factor=3, n_heads=8,
-                 e_layers=2, d_layers=2):
+                 e_layers=2, d_layers=2, token_size=3):
         super(Autoformer, self).__init__()
 
         # Decomp
@@ -258,7 +261,7 @@ class Autoformer(nn.Module):
         self.decomp = series_decomp(kernel_size)
 
         # Embedding
-        self.enc_embedding = DataEmbedding_wo_pos(d_feat, d_model)
+        self.enc_embedding = DataEmbedding_wo_pos(d_feat, d_model, token_size)
         # Encoder
         self.encoder = Encoder(
             [
@@ -274,7 +277,7 @@ class Autoformer(nn.Module):
             norm_layer=my_Layernorm(d_model)
         )
         # Decoder
-        self.dec_embedding = DataEmbedding_wo_pos(d_feat, d_model)
+        self.dec_embedding = DataEmbedding_wo_pos(d_feat, d_model, token_size)
         self.decoder = Decoder(
             [
                 DecoderLayer(
